@@ -32,7 +32,7 @@ import {Repository} from "../repository/Repository";
 import {SaveOptions} from "../repository/SaveOptions";
 import {TreeRepository} from "../repository/TreeRepository";
 import {ObjectUtils} from "../util/ObjectUtils";
-import * as Observable from "zen-observable";
+import { Observable } from "zen-observable-ts";
 import {createLiteralTreeRepository} from "../repository/LiteralTreeRepository";
 import {EntityTarget} from "../common/EntityTarget";
 import {createLiteralMongoRepository} from "../repository/LiteralMongoRepository";

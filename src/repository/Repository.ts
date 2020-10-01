@@ -12,7 +12,7 @@ import {UpdateResult} from "../query-builder/result/UpdateResult";
 import {InsertResult} from "../query-builder/result/InsertResult";
 import {QueryDeepPartialEntity} from "../query-builder/QueryPartialEntity";
 import {ObjectID} from "../driver/mongodb/typings";
-import * as Observable from "zen-observable";
+import { Observable } from "zen-observable-ts";
 
 /**
  * Repository is supposed to work with your entity objects. Find entities, insert, update, delete, etc.

@@ -9,7 +9,7 @@ import {SelectQueryBuilder} from "../query-builder/SelectQueryBuilder";
 import {QueryRunner} from "../query-runner/QueryRunner";
 import {RemoveOptions} from "./RemoveOptions";
 import {SaveOptions} from "./SaveOptions";
-import * as Observable from "zen-observable";
+import { Observable } from "zen-observable-ts";
 import {Repository} from "./Repository";
 import {EntityManager} from "..";
 import {EntityTarget} from "../common/EntityTarget";

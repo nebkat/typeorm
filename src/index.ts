@@ -1,7 +1,7 @@
 /*!
  */
 import "reflect-metadata";
-import "zen-observable";
+import "zen-observable-ts";
 import {ConnectionManager} from "./connection/ConnectionManager";
 import {Connection} from "./connection/Connection";
 import {MetadataArgsStorage} from "./metadata-args/MetadataArgsStorage";

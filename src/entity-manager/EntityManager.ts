@@ -16,7 +16,7 @@ import {UpdateResult} from "../query-builder/result/UpdateResult";
 import {DeleteResult} from "../query-builder/result/DeleteResult";
 import {IsolationLevel} from "../driver/types/IsolationLevel";
 import {FindExtraOptions, FindOptions, FindOptionsWhere} from "../find-options/FindOptions";
-import * as Observable from "zen-observable";
+import { Observable } from "zen-observable-ts";
 
 /**
  * Entity manager supposed to work with any entity, automatically find its repository and call its methods,
