@@ -755,6 +755,13 @@ export class AuroraDataApiDriver implements Driver {
     }
 
     /**
+     * Returns true if driver parameters are indexed
+     */
+    hasIndexedParameters(): boolean {
+        return false;
+    }
+
+    /**
      * Creates an escaped parameter.
      */
     createParameter(parameterName: string, index: number): string {
