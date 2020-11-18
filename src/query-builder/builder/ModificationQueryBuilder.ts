@@ -32,11 +32,11 @@ export abstract class ModificationQueryBuilder<Entity, Result> extends QueryBuil
      * Gets generated sql query without parameters being replaced.
      */
     getQuery(): string {
-        let sql = this.createComment();
-        sql += this.createModificationExpression();
-        sql += this.createOrderByExpression();
-        sql += this.createLimitExpression();
-        return sql.trim();
+        return [this.createComment(),
+            this.createModificationExpression(),
+            this.createOrderByExpression(),
+            this.createLimitExpression()]
+            .filter(q => q).join(" ");
     }
 
     // -------------------------------------------------------------------------
@@ -272,25 +272,6 @@ export abstract class ModificationQueryBuilder<Entity, Result> extends QueryBuil
     // -------------------------------------------------------------------------
 
     /**
-     * Creates "ORDER BY" part of SQL query.
-     */
-    protected createOrderByExpression() {
-        const orderBys = this.expressionMap.orderBys;
-        if (Object.keys(orderBys).length > 0)
-            return " ORDER BY " + Object.keys(orderBys)
-                .map(columnName => {
-                    if (typeof orderBys[columnName] === "string") {
-                        return this.replacePropertyNames(columnName) + " " + orderBys[columnName];
-                    } else {
-                        return this.replacePropertyNames(columnName) + " " + (orderBys[columnName] as any).order + " " + (orderBys[columnName] as any).nulls;
-                    }
-                })
-                .join(", ");
-
-        return "";
-    }
-
-    /**
      * Creates "LIMIT" parts of SQL query.
      */
     protected createLimitExpression(): string {
@@ -298,7 +279,7 @@ export abstract class ModificationQueryBuilder<Entity, Result> extends QueryBuil
 
         if (limit) {
             if (this.connection.driver instanceof MysqlDriver || this.connection.driver instanceof AuroraDataApiDriver) {
-                return " LIMIT " + limit;
+                return "LIMIT " + limit;
             } else {
                 throw new LimitOnUpdateNotSupportedError();
             }
