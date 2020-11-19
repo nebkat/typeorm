@@ -12,7 +12,7 @@ export function UpdateDateColumn(options?: ColumnOptions): PropertyDecorator {
             target: object.constructor,
             propertyName: propertyName,
             mode: "updateDate",
-            options: options ? options : {}
+            options: {type: "typeorm:updateDate", ...options}
         } as ColumnMetadataArgs);
     };
 }

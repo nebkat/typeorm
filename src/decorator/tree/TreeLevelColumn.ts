@@ -6,12 +6,11 @@ import {ColumnMetadataArgs} from "../../metadata-args/ColumnMetadataArgs";
  */
 export function TreeLevelColumn(): PropertyDecorator {
     return function (object: Object, propertyName: string) {
-
         getMetadataArgsStorage().columns.push({
             target: object.constructor,
             propertyName: propertyName,
             mode: "treeLevel",
-            options: {}
+            options: {type: "typeorm:treeLevel"}
         } as ColumnMetadataArgs);
     };
 }

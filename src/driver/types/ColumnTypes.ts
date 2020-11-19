@@ -196,6 +196,29 @@ export type SimpleColumnType =
     |"cube" // postgres
     |"ltree"; // postgres
 
+// TODO: TypeScript 4.1 Replace with mapped types
+export type TypeOrmMappedColumnType =
+    "typeorm:createDate"
+    |"typeorm:updateDate"
+    |"typeorm:deleteDate"
+    |"typeorm:version"
+    |"typeorm:treeLevel"
+    |"typeorm:migrationId"
+    |"typeorm:migrationTimestamp"
+    |"typeorm:migrationName"
+    |"typeorm:cacheId"
+    |"typeorm:cacheIdentifier"
+    |"typeorm:cacheTime"
+    |"typeorm:cacheDuration"
+    |"typeorm:cacheQuery"
+    |"typeorm:cacheResult"
+    |"typeorm:metadataType"
+    |"typeorm:metadataDatabase"
+    |"typeorm:metadataSchema"
+    |"typeorm:metadataTable"
+    |"typeorm:metadataName"
+    |"typeorm:metadataValue";
+
 /**
  * Any column type column can be.
  */
@@ -207,4 +230,5 @@ export type ColumnType = WithPrecisionColumnType
     |BooleanConstructor
     |DateConstructor
     |NumberConstructor
-    |StringConstructor;
+    |StringConstructor
+    |TypeOrmMappedColumnType;

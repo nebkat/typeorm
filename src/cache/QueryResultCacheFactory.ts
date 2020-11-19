@@ -1,5 +1,5 @@
 import {RedisQueryResultCache} from "./RedisQueryResultCache";
-import {DbQueryResultCache} from "./DbQueryResultCache";
+import {DbQueryResultCache} from "./db/DbQueryResultCache";
 import {QueryResultCache} from "./QueryResultCache";
 import {Connection} from "../connection/Connection";
 

@@ -1,4 +1,4 @@
-import {ColumnType} from "../driver/types/ColumnTypes";
+import { ColumnType, TypeOrmMappedColumnType } from "../driver/types/ColumnTypes";
 import {EntityMetadata} from "./EntityMetadata";
 import {EmbeddedMetadata} from "./EmbeddedMetadata";
 import {RelationMetadata} from "./RelationMetadata";
@@ -10,6 +10,7 @@ import {ValueTransformer} from "../decorator/options/ValueTransformer";
 import {MongoDriver} from "../driver/mongodb/MongoDriver";
 import {FindOperator} from "../find-options/FindOperator";
 import {ApplyValueTransformers} from "../util/ApplyValueTransformers";
+import { MappedColumnTypes } from '../driver/types/MappedColumnTypes';
 
 /**
  * This metadata contains all information about entity's column.
@@ -330,8 +331,14 @@ export class ColumnMetadata {
             this.propertyName = options.args.propertyName;
         if (options.args.options.name)
             this.givenDatabaseName = options.args.options.name;
-        if (options.args.options.type)
+        if (options.args.options.type) {
             this.type = options.args.options.type;
+            // TODO: Generic mapped types?
+            if (typeof this.type === "string" && this.type.startsWith("typeorm:")) {
+                const mappedType = this.type.substring("typeorm:".length) as keyof MappedColumnTypes; // TODO: Make MappedColumnTypes only contain ColumnType?
+                this.type = options.connection.driver.mappedDataTypes[mappedType] as ColumnType;
+            }
+        }
         if (options.args.options.length)
             this.length = options.args.options.length ? options.args.options.length.toString() : "";
         if (options.args.options.width)
@@ -406,34 +413,24 @@ export class ColumnMetadata {
             this.spatialFeatureType = options.args.options.spatialFeatureType;
         if (options.args.options.srid !== undefined)
             this.srid = options.args.options.srid;
-        if (this.isTreeLevel)
-            this.type = options.connection.driver.mappedDataTypes.treeLevel;
         if (this.isCreateDate) {
-            if (!this.type)
-                this.type = options.connection.driver.mappedDataTypes.createDate;
             if (!this.default)
                 this.default = () => options.connection.driver.mappedDataTypes.createDateDefault;
             if (this.precision === undefined && options.connection.driver.mappedDataTypes.createDatePrecision)
                 this.precision = options.connection.driver.mappedDataTypes.createDatePrecision;
         }
         if (this.isUpdateDate) {
-            if (!this.type)
-                this.type = options.connection.driver.mappedDataTypes.updateDate;
             if (!this.default)
                 this.default = () => options.connection.driver.mappedDataTypes.updateDateDefault;
             if (this.precision === undefined && options.connection.driver.mappedDataTypes.updateDatePrecision)
                 this.precision = options.connection.driver.mappedDataTypes.updateDatePrecision;
         }
         if (this.isDeleteDate) {
-            if (!this.type)
-                this.type = options.connection.driver.mappedDataTypes.deleteDate;
             if (!this.isNullable)
                 this.isNullable = options.connection.driver.mappedDataTypes.deleteDateNullable;
             if (this.precision === undefined && options.connection.driver.mappedDataTypes.deleteDatePrecision)
                 this.precision = options.connection.driver.mappedDataTypes.deleteDatePrecision;
         }
-        if (this.isVersion)
-            this.type = options.connection.driver.mappedDataTypes.version;
         if (options.closureType)
             this.closureType = options.closureType;
         if (options.nestedSetLeft)
