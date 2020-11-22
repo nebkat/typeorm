@@ -1007,8 +1007,7 @@ export abstract class QueryBuilder<Entity, Result = any> {
                                     const realParameterValues: any[] = parameterValue.multipleParameters ? parameterValue.value : [parameterValue.value];
                                     realParameterValues.forEach((realParameterValue, realParameterValueIndex) => {
                                         this.expressionMap.nativeParameters[parameterName + (parameterBaseCount + realParameterValueIndex)] = realParameterValue;
-                                        parameterIndex++;
-                                        parameters.push(this.connection.driver.createParameter(parameterName + (parameterBaseCount + realParameterValueIndex), parameterIndex - 1));
+                                        parameters.push(this.connection.driver.createParameter(parameterName + (parameterBaseCount + realParameterValueIndex), parameterIndex++));
                                     });
                                 }
                             }
@@ -1016,8 +1015,7 @@ export abstract class QueryBuilder<Entity, Result = any> {
                             return this.computeFindOperatorExpression(parameterValue, aliasPath, parameters);
                         } else {
                             this.expressionMap.nativeParameters[parameterName] = parameterValue;
-                            parameterIndex++;
-                            const parameter = this.connection.driver.createParameter(parameterName, parameterIndex - 1);
+                            const parameter = this.connection.driver.createParameter(parameterName, parameterIndex++);
                             return `${aliasPath} = ${parameter}`;
                         }
 
@@ -1035,8 +1033,7 @@ export abstract class QueryBuilder<Entity, Result = any> {
                         } else {
                             const parameterName = "where_" + whereIndex + "_" + parameterIndex;
                             this.expressionMap.nativeParameters[parameterName] = parameterValue;
-                            parameterIndex++;
-                            return `${aliasPath} = ${this.connection.driver.createParameter(parameterName, parameterIndex - 1)}`;
+                            return `${aliasPath} = ${this.connection.driver.createParameter(parameterName, parameterIndex++)}`;
                         }
                     }).join(" AND ");
                 });
