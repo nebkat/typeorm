@@ -463,6 +463,9 @@ export abstract class AbstractSqliteDriver implements Driver {
         } else if (typeof defaultValue === "string") {
             return `'${defaultValue}'`;
 
+        } else if (defaultValue === null) {
+            return `NULL`;
+
         } else {
             return defaultValue;
         }
