@@ -47,7 +47,7 @@ export class ClosureJunctionEntityMetadataBuilder {
                 referencedColumn: primaryColumn,
                 args: {
                     target: "",
-                    mode: "virtual",
+                    mode: "internal",
                     propertyName: primaryColumn.propertyName + "_ancestor", // todo: naming strategy
                     options: {
                         primary: true,
@@ -63,7 +63,7 @@ export class ClosureJunctionEntityMetadataBuilder {
                 referencedColumn: primaryColumn,
                 args: {
                     target: "",
-                    mode: "virtual",
+                    mode: "internal",
                     propertyName: primaryColumn.propertyName + "_descendant",
                     options: {
                         primary: true,
@@ -100,7 +100,7 @@ export class ClosureJunctionEntityMetadataBuilder {
                 entityMetadata: entityMetadata,
                 args: {
                     target: "",
-                    mode: "virtual",
+                    mode: "internal",
                     propertyName: "level",
                     options: {
                         type: this.connection.driver.mappedDataTypes.treeLevel,
