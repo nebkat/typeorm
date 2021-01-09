@@ -1548,11 +1548,15 @@ export class SelectQueryBuilder<Entity> extends QueryBuilder<Entity, { entities:
 
         const columns: ColumnMetadata[] = [];
         if (hasMainAlias) {
-            columns.push(...metadata.columns.filter(column => column.isSelect === true));
+            columns.push(...metadata.columns.filter(column => column.isSelect));
         }
         columns.push(...metadata.columns.filter(column => {
-            return this.expressionMap.selects.some(select => select.selection === aliasName + "." + column.propertyPath);
+            return this.expressionMap.selects.some(select =>
+                select.selection === aliasName + "." + column.propertyPath
+                || (column.embeddedMetadata && select.selection === aliasName + "." + column.embeddedMetadata.propertyPath)
+            );
         }));
+
 
         // if user used partial selection and did not select some primary columns which are required to be selected
         // we select those primary columns and mark them as "internal". Later internal column values will be removed from final entity

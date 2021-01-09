@@ -806,7 +806,7 @@ export class EntityManager {
         if (!passedId) {
             findOptions = {
                 ...(findOptions || {}),
-                take: 1,
+                //take: 1,
             };
         }
 
