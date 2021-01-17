@@ -119,10 +119,18 @@ export interface Driver {
     escape(name: string): string;
 
     /**
-     * Build full table name with database name, schema name and table name.
+     * Build full table path with database name, schema name and table name.
      * E.g. "myDB"."mySchema"."myTable"
+     *
+     * TODO: Rename to buildTablePath
      */
     buildTableName(tableName: string, schema?: string, database?: string): string;
+
+    /**
+    * Build full schema path with database name and schema name.
+    * E.g. "myDB"."mySchema"
+    */
+    buildSchemaPath?(schema?: string, database?: string): string | undefined;
 
     /**
      * Wraps given value in any additional expressions required based on its column type and metadata.

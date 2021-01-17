@@ -348,7 +348,7 @@ export class OracleDriver implements Driver {
      * Oracle does not support table schemas. One user can have only one schema.
      */
     buildTableName(tableName: string, schema?: string, database?: string): string {
-        return tableName;
+        return database ? `${database}.${tableName}` : tableName;
     }
 
     /**
