@@ -9,6 +9,7 @@ import {BaseConnectionOptions} from "../connection/BaseConnectionOptions";
 import {TableColumn} from "../schema-builder/table/TableColumn";
 import {EntityMetadata} from "../metadata/EntityMetadata";
 import {ReplicationMode} from "./types/ReplicationMode";
+import {DriverAbilities} from "./DriverAbilities";
 import {EntityManager} from "../entity-manager/EntityManager";
 
 /**
@@ -20,6 +21,11 @@ export interface Driver {
      * Connection options.
      */
     options: BaseConnectionOptions;
+
+    /**
+     * Features supported by the driver.
+     */
+    readonly abilities: DriverAbilities;
 
     /**
      * Master database used to perform all write queries.
@@ -202,21 +208,6 @@ export interface Driver {
      * and returns only changed.
      */
     findChangedColumns(tableColumns: TableColumn[], columnMetadatas: ColumnMetadata[]): ColumnMetadata[];
-
-    /**
-     * Returns true if driver supports RETURNING / OUTPUT statement.
-     */
-    isReturningSqlSupported(): boolean;
-
-    /**
-     * Returns true if driver supports uuid values generation on its own.
-     */
-    isUUIDGenerationSupported(): boolean;
-
-    /**
-     * Returns true if driver supports fulltext indices.
-     */
-    isFullTextColumnTypeSupported(): boolean;
 
     /**
      * Returns true if driver parameters are indexed

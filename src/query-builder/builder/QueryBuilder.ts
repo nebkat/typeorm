@@ -13,8 +13,6 @@ import {Alias} from "../Alias";
 import {Brackets} from "../Brackets";
 import {QueryDeepPartialEntity} from "../QueryPartialEntity";
 import {SqljsDriver} from "../../driver/sqljs/SqljsDriver";
-import {PostgresDriver} from "../../driver/postgres/PostgresDriver";
-import {CockroachDriver} from "../../driver/cockroachdb/CockroachDriver";
 import {EntitySchema} from "../../index";
 import {FindOperator} from "../../find-options/FindOperator";
 import {In} from "../../find-options/operator/In";
@@ -900,8 +898,6 @@ export abstract class QueryBuilder<Entity, Result = any> {
      * Gets SQL needs to be inserted into final query.
      */
     protected computeFindOperatorExpression(operator: FindOperator<any>, aliasPath: string, parameters: any[]): string {
-        const { driver } = this.connection;
-
         switch (operator.type) {
             case "not":
                 if (operator.child) {
@@ -920,7 +916,7 @@ export abstract class QueryBuilder<Entity, Result = any> {
             case "equal":
                 return `${aliasPath} = ${parameters[0]}`;
             case "ilike":
-                if (driver instanceof PostgresDriver || driver instanceof CockroachDriver) {
+                if (this.connection.driver.abilities.ilikeOperator) {
                     return `${aliasPath} ILIKE ${parameters[0]}`;
                 }
 

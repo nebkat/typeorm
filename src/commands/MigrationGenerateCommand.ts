@@ -105,21 +105,17 @@ export class MigrationGenerateCommand implements yargs.CommandModule {
 
                 // mysql is exceptional here because it uses ` character in to escape names in queries, that's why for mysql
                 // we are using simple quoted string instead of template string syntax
-                if (connection.driver instanceof MysqlDriver || connection.driver instanceof AuroraDataApiDriver) {
-                    sqlInMemory.upQueries.forEach(upQuery => {
-                        upSqls.push("        await queryRunner.query(\"" + upQuery.query.replace(new RegExp(`"`, "g"), `\\"`) + "\"" + MigrationGenerateCommand.queryParams(upQuery.parameters) + ");");
-                    });
-                    sqlInMemory.downQueries.forEach(downQuery => {
-                        downSqls.push("        await queryRunner.query(\"" + downQuery.query.replace(new RegExp(`"`, "g"), `\\"`) + "\"" + MigrationGenerateCommand.queryParams(downQuery.parameters) + ");");
-                    });
-                } else {
-                    sqlInMemory.upQueries.forEach(upQuery => {
-                        upSqls.push("        await queryRunner.query(`" + upQuery.query.replace(new RegExp("`", "g"), "\\`") + "`" + MigrationGenerateCommand.queryParams(upQuery.parameters) + ");");
-                    });
-                    sqlInMemory.downQueries.forEach(downQuery => {
-                        downSqls.push("        await queryRunner.query(`" + downQuery.query.replace(new RegExp("`", "g"), "\\`") + "`" + MigrationGenerateCommand.queryParams(downQuery.parameters) + ");");
-                    });
-                }
+                const delimiter = connection.driver instanceof MysqlDriver || connection.driver instanceof AuroraDataApiDriver ? `"` : "`";
+                const delimeterRegex = new RegExp(delimiter, "g");
+
+                const queryParamsIfPresent = (parameters: any[] | undefined) => !parameters || !parameters.length ? "" : `, ${JSON.stringify(parameters)}`;
+
+                sqlInMemory.upQueries.forEach(upQuery => {
+                    upSqls.push(`        await queryRunner.query(${delimiter}${upQuery.query.replace(delimeterRegex, `\\${delimiter}`)}${delimiter}${queryParamsIfPresent(upQuery.parameters)});`);
+                });
+                sqlInMemory.downQueries.forEach(downQuery => {
+                    downSqls.push(`        await queryRunner.query(${delimiter}${downQuery.query.replace(delimeterRegex, `\\${delimiter}`)}${delimiter}${queryParamsIfPresent(downQuery.parameters)});`);
+                });
             } finally {
                 await connection.close();
             }

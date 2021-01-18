@@ -77,6 +77,8 @@ export class SqljsDriver extends AbstractSqliteDriver {
         return this.queryRunner;
     }
 
+
+
     /**
      * Loads a database from a given file (Node.js), local storage key (browser) or array.
      * This will delete the current database!
