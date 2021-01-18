@@ -76,11 +76,6 @@ export class CockroachDriver implements Driver {
     isReplicated: boolean = false;
 
     /**
-     * Indicates if tree tables are supported by this driver.
-     */
-    treeSupport = true;
-
-    /**
      * Gets list of supported column data types by a driver.
      *
      * @see https://www.cockroachlabs.com/docs/stable/data-types.html

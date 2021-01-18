@@ -9,6 +9,7 @@ import {BaseConnectionOptions} from "../connection/BaseConnectionOptions";
 import {TableColumn} from "../schema-builder/table/TableColumn";
 import {EntityMetadata} from "../metadata/EntityMetadata";
 import {ReplicationMode} from "./types/ReplicationMode";
+import {EntityManager} from "../entity-manager/EntityManager";
 
 /**
  * Driver organizes TypeORM communication with specific database management system.
@@ -31,11 +32,6 @@ export interface Driver {
      * Indicates if replication is enabled.
      */
     isReplicated: boolean;
-
-    /**
-     * Indicates if tree tables are supported by this driver.
-     */
-    treeSupport: boolean;
 
     /**
      * Gets list of supported column data types by a driver.
@@ -96,7 +92,7 @@ export interface Driver {
     disconnect(): Promise<void>;
 
     /**
-     * Synchronizes database schema (creates tables, indices, etc).
+     * Creates a schema builder used to build and sync a schema.
      */
     createSchemaBuilder(): SchemaBuilder;
 
@@ -104,6 +100,11 @@ export interface Driver {
      * Creates a query runner used for common queries.
      */
     createQueryRunner(mode: ReplicationMode): QueryRunner;
+
+    /**
+     * Creates an entity manager.
+     */
+    createEntityManager?(queryRunner?: QueryRunner): EntityManager;
 
     /**
      * Replaces parameters in the given sql with special escaping character

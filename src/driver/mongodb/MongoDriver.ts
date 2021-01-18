@@ -18,7 +18,7 @@ import {ApplyValueTransformers} from "../../util/ApplyValueTransformers";
 import {ReplicationMode} from "../types/ReplicationMode";
 import {DriverUtils} from "../DriverUtils";
 import {Mutable} from "../../util/TypeUtils";
-import {QueryRunner} from "../..";
+import {MongoEntityManager} from "./MongoEntityManager";
 
 /**
  * Organizes communication with MongoDB.
@@ -58,11 +58,6 @@ export class MongoDriver implements Driver {
      * Indicates if replication is enabled.
      */
     isReplicated: boolean = false;
-
-    /**
-     * Indicates if tree tables are supported by this driver.
-     */
-    treeSupport = false;
 
     /**
      * Mongodb does not need to have column types because they are not used in schema sync.
@@ -234,7 +229,7 @@ export class MongoDriver implements Driver {
                     if (err) return fail(err);
 
                     this.queryRunner = new MongoQueryRunner(this.connection, client);
-                    (this.queryRunner as Mutable<QueryRunner>).manager = this.connection.manager;
+                    (this.queryRunner as Mutable<MongoQueryRunner>).manager = this.connection.manager as MongoEntityManager;
                     ok();
                 });
         });
@@ -270,6 +265,13 @@ export class MongoDriver implements Driver {
      */
     createQueryRunner(mode: ReplicationMode) {
         return this.queryRunner!;
+    }
+
+    /**
+     * Creates an entity manager.
+     */
+    createEntityManager(): MongoEntityManager {
+        return new MongoEntityManager(this.connection);
     }
 
     /**
@@ -450,8 +452,8 @@ export class MongoDriver implements Driver {
          const credentialsUrlPart = (options.username && options.password)
             ? `${options.username}:${options.password}@`
             : "";
-        const portUrlPart = (schemaUrlPart === "mongodb+srv") 
-            ? "" 
+        const portUrlPart = (schemaUrlPart === "mongodb+srv")
+            ? ""
             : `:${options.port || "27017"}`;
 
         return `${schemaUrlPart}://${credentialsUrlPart}${options.host || "127.0.0.1"}${portUrlPart}/${options.database || ""}`;
