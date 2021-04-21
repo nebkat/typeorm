@@ -109,10 +109,10 @@ export class FindOptionsUtils {
             qb.where(options.where);
 
         if ((options as FindManyOptions<T>).skip)
-            qb.skip((options as FindManyOptions<T>).skip!);
+            qb.offset((options as FindManyOptions<T>).skip!);
 
         if ((options as FindManyOptions<T>).take)
-            qb.take((options as FindManyOptions<T>).take!);
+            qb.limit((options as FindManyOptions<T>).take!);
 
         if (options.order)
             Object.keys(options.order).forEach(key => {

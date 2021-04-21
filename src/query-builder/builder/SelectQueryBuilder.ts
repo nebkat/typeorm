@@ -1051,14 +1051,16 @@ export class SelectQueryBuilder<Entity> extends QueryBuilder<Entity, { entities:
 
             const query = [];
 
+            const expressionContext = this.createExpressionContext(joinAttr.alias);
+
             // if join was build without relation (e.g. without "post.category") then it means that we have direct
             // table to join, without junction table involved. This means we simply join direct table.
             if (!parentAlias || !relation) {
-                const destinationJoin = joinAttr.alias.subQuery ? this.buildExpression(null, joinAttr.alias.subQuery) : this.getTableName(destinationTableName);
+                const destinationJoin = joinAttr.alias.subQuery ? this.buildExpression(expressionContext, joinAttr.alias.subQuery) : this.getTableName(destinationTableName);
                 query.push(joinAttr.direction, "JOIN",
                     destinationJoin, this.escape(destinationTableAlias));
 
-                if (joinAttr.condition) query.push("ON", this.buildExpression(null, joinAttr.condition));
+                if (joinAttr.condition) query.push("ON", this.buildExpression(expressionContext, joinAttr.condition));
             } else {
                 // if real entity relation is involved
                 let destinationConditions: Expression[];
@@ -1110,7 +1112,7 @@ export class SelectQueryBuilder<Entity> extends QueryBuilder<Entity, { entities:
                     // Extra join for junction table
                     query.push(joinAttr.direction, "JOIN",
                         this.getTableName(junctionTableName), this.escape(junctionTableAlias),
-                        "ON", this.buildExpression(null, And(...junctionConditions)));
+                        "ON", this.buildExpression(expressionContext, And(...junctionConditions)));
                 }
 
                 // Extra user provided condition
@@ -1118,7 +1120,7 @@ export class SelectQueryBuilder<Entity> extends QueryBuilder<Entity, { entities:
 
                 query.push(joinAttr.direction, "JOIN",
                     this.getTableName(destinationTableName), this.escape(destinationTableAlias),
-                    "ON", this.buildExpression(this.createExpressionContext(joinAttr.alias), And(...destinationConditions)));
+                    "ON", this.buildExpression(expressionContext, And(...destinationConditions)));
             }
 
             return query.join(" ");

@@ -1,4 +1,5 @@
 import {ValueTransformer} from "../decorator/options/ValueTransformer";
+import {ExpressionBuilder} from "../expression-builder/Expression";
 
 export class ApplyValueTransformers {
     static transformFrom(transformer: ValueTransformer | ValueTransformer[], databaseValue: any) {
@@ -11,6 +12,9 @@ export class ApplyValueTransformers {
         return transformer.from(databaseValue);
     }
     static transformTo(transformer: ValueTransformer | ValueTransformer[], entityValue: any) {
+        if (entityValue instanceof ExpressionBuilder)
+            return entityValue.applyValueTransformers?.(transformer) ?? entityValue;
+
         if (Array.isArray(transformer)) {
             return transformer.reduce((transformedValue, _transformer) => {
                 return _transformer.to(transformedValue);
