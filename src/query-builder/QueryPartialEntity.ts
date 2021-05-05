@@ -1,9 +1,10 @@
+import {BuildableExpression} from "../expression-builder/Expression";
 
 /**
  * Make all properties in T optional
  */
 export type QueryPartialEntity<T> = {
-    [P in keyof T]?: T[P] | (() => string);
+    [P in keyof T]?: T[P] | (() => string) | BuildableExpression;
 };
 
 /**
@@ -15,5 +16,5 @@ export type QueryDeepPartialEntity<T> = {
             T[P] extends Array<infer U> ? Array<QueryDeepPartialEntity<U>> :
             T[P] extends ReadonlyArray<infer U> ? ReadonlyArray<QueryDeepPartialEntity<U>> :
             QueryDeepPartialEntity<T[P]>
-        ) | (() => string);
+        ) | (() => string) | BuildableExpression;
 };
